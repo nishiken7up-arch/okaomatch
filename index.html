@@ -16,7 +16,7 @@ main{max-width:480px;margin:auto;padding:18px 16px 28px;text-align:center;min-he
 .track{height:9px;background:#eadfcb;border-radius:20px;overflow:hidden;margin:12px 4px 18px}.bar{height:100%;width:25%;background:linear-gradient(90deg,#ff9e79,#ffca48);transition:width .25s}
 .card{background:#fff;border:3px solid #fff;border-radius:28px;padding:18px 14px;box-shadow:0 8px 0 #f3d8c8}
 .tip{font-size:17px;font-weight:800}.face{font-size:100px;line-height:1.25;margin:5px 0}.name{font-size:23px;font-weight:900}
-.camera{position:relative;max-width:340px;aspect-ratio:4/3;background:#272727;border-radius:20px;overflow:hidden;margin:15px auto 10px;display:flex;align-items:center;justify-content:center}
+.camera{position:relative;max-width:420px;width:100%;aspect-ratio:4/3;background:#272727;border-radius:20px;overflow:hidden;margin:15px auto 10px;display:flex;align-items:center;justify-content:center}
 video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);display:none}.placeholder{color:white;padding:12px}.placeholder .emoji{font-size:48px}
 .status{position:absolute;bottom:8px;left:8px;right:8px;color:#fff;background:#0009;border-radius:12px;padding:7px;font-size:13px}
 .meter{min-height:24px;font-size:14px;font-weight:700;margin:7px 0}
@@ -98,8 +98,29 @@ button{width:100%;border:0;border-radius:16px;padding:15px 12px;font-size:17px;f
     if(stages[index].key==="angry") return e.angry||0;
     return Math.max(e.surprised||0,e.disgusted||0,e.fearful||0);
   }
+  function playSuccessSound(){
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const now = ctx.currentTime;
+      [[659.25,0],[783.99,0.13],[1046.5,0.26]].forEach(([freq,offset])=>{
+        const osc=ctx.createOscillator();
+        const gain=ctx.createGain();
+        osc.type="sine";
+        osc.frequency.setValueAtTime(freq,now+offset);
+        gain.gain.setValueAtTime(0.0001,now+offset);
+        gain.gain.exponentialRampToValueAtTime(0.18,now+offset+0.025);
+        gain.gain.exponentialRampToValueAtTime(0.0001,now+offset+0.28);
+        osc.connect(gain);gain.connect(ctx.destination);
+        osc.start(now+offset);osc.stop(now+offset+0.3);
+      });
+      setTimeout(()=>ctx.close(),800);
+    } catch(e) {}
+  }
   function win(){
     if(busy||!running)return;
+    playSuccessSound();
     busy=true; matchedSince=0;
     if(timer){clearInterval(timer);timer=null;}
     $("face").textContent="🎉";
@@ -113,7 +134,7 @@ button{width:100%;border:0;border-radius:16px;padding:15px 12px;font-size:17px;f
       const result=await faceapi.detectSingleFace($("video"),new faceapi.TinyFaceDetectorOptions({inputSize:224,scoreThreshold:.45})).withFaceExpressions();
       if(!result){matchedSince=0;$("meter").textContent="おかおが見つからないよ。カメラを見てね！";setStatus("カメラに顔をうつしてね");return;}
       const score=getScore(result.expressions);
-      const threshold=stages[index].key==="happy"?.72:stages[index].key==="angry"?.55:.48;
+      const threshold=stages[index].key==="happy"?.72:stages[index].key==="angry"?.28:.48;
       if(score>=threshold){
         if(!matchedSince)matchedSince=Date.now();
         const left=Math.max(0,1200-(Date.now()-matchedSince));
