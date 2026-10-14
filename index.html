@@ -1,191 +1,123 @@
 <!doctype html>
-<html lang="ja">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#fff7df">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="おかおマッチ！">
+<html lang="ja"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101026"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="おかおマッチ！">
 <title>おかおマッチ！</title>
 <style>
-:root{color-scheme:light;--ink:#332d29;--cream:#fff7df;--pink:#ff8f9c;--blue:#2878e5;--yellow:#ffcf4a}
-*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#fff7df,#ffeef0);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN",Meiryo,sans-serif}
-main{max-width:480px;margin:auto;padding:18px 16px 28px;text-align:center;min-height:100dvh}
-.kicker{font-size:13px;letter-spacing:2px;font-weight:700}.title{font-size:32px;margin:4px 0 8px}.progress{font-weight:700;font-size:14px}
-.track{height:9px;background:#eadfcb;border-radius:20px;overflow:hidden;margin:12px 4px 18px}.bar{height:100%;width:25%;background:linear-gradient(90deg,#ff9e79,#ffca48);transition:width .25s}
-.card{background:#fff;border:3px solid #fff;border-radius:28px;padding:18px 14px;box-shadow:0 8px 0 #f3d8c8}
-.tip{font-size:17px;font-weight:800}.face{font-size:100px;line-height:1.25;margin:5px 0}.name{font-size:23px;font-weight:900}
-.camera{position:relative;max-width:420px;width:100%;aspect-ratio:4/3;background:#272727;border-radius:20px;overflow:hidden;margin:15px auto 10px;display:flex;align-items:center;justify-content:center}
-video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);display:none}.placeholder{color:white;padding:12px}.placeholder .emoji{font-size:48px}
-.status{position:absolute;bottom:8px;left:8px;right:8px;color:#fff;background:#0009;border-radius:12px;padding:7px;font-size:13px}
-.meter{min-height:24px;font-size:14px;font-weight:700;margin:7px 0}
-button{width:100%;border:0;border-radius:16px;padding:15px 12px;font-size:17px;font-weight:900;cursor:pointer;touch-action:manipulation}
-.primary{background:var(--blue);color:white}.secondary{background:var(--yellow);color:#392600;margin-top:9px}.small{font-size:12px;line-height:1.5;opacity:.75;margin:12px 4px 0}
-.hidden{display:none!important}.finish{padding:18px 5px}.finish .trophy{font-size:76px}
-@media(prefers-reduced-motion:reduce){*{transition:none!important}}
-</style>
-</head>
-<body>
-<main>
-  <div class="kicker">かおをまねっこしよう！</div>
-  <h1 class="title">おかおマッチ！</h1>
-  <div id="progress" class="progress">ステージ 1 / 4</div>
-  <div class="track"><div id="bar" class="bar"></div></div>
-  <section id="game" class="card">
-    <div id="tip" class="tip">このおかおをまねしてね！</div>
-    <div id="face" class="face">😄</div>
-    <div id="name" class="name">にこにこ笑顔</div>
-    <div class="camera">
-      <video id="video" autoplay playsinline muted></video>
-      <div id="placeholder" class="placeholder"><div class="emoji">🤳</div><div>カメラでおかおをうつそう！</div></div>
-      <div id="status" class="status">カメラをひらいてね</div>
-    </div>
-    <div id="meter" class="meter">お手本と同じ表情をしてみよう！</div>
-    <button id="start" class="primary">📷 カメラと自動判定をスタート</button>
-    <button id="next" class="secondary hidden">つぎへすすむ</button>
-    <p class="small">表情認識は目安だよ。特に怒った顔や変顔は、うまく判定できないことがあります。</p>
-  </section>
-  <section id="finish" class="finish hidden">
-    <div class="trophy">🏆</div><h2>ぜんぶクリア！</h2><p>すごい！おかおマッチのめいじん！</p>
-    <button id="again" class="primary">もういっかい！</button>
-  </section>
-  <p class="small">カメラ映像はこのページ内で処理し、アプリ側から映像をアップロードしません。カメラ使用には許可が必要です。</p>
+:root{--bg:#101026;--panel:#1c1b3b;--pink:#ff4f9a;--cyan:#45e6ef;--yellow:#ffe45e;--white:#fff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#30205c 0,#101026 58%);color:var(--white);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN",Meiryo,sans-serif}
+main{max-width:500px;margin:auto;padding:16px 14px 28px;min-height:100dvh;text-align:center}
+.brand{font-size:12px;font-weight:900;letter-spacing:3px;color:var(--cyan)}h1{font-size:30px;line-height:1.1;margin:7px 0 8px;font-weight:1000;text-shadow:0 0 18px #ff4f9a88}
+.sub{font-size:13px;color:#d8d5ff}.toprow{display:flex;align-items:center;justify-content:space-between;margin:15px 2px 8px;font-size:13px;font-weight:800}.track{height:8px;background:#3b385c;border-radius:9px;overflow:hidden}.bar{height:100%;width:25%;background:linear-gradient(90deg,var(--pink),var(--yellow),var(--cyan));transition:width .3s}
+.panel{margin-top:14px;background:linear-gradient(145deg,#25224a,#191831);border:1px solid #514a80;border-radius:24px;padding:15px 12px;box-shadow:0 10px 30px #0003}
+.instruction{font-size:17px;font-weight:900}.target{margin:12px auto 8px;padding:10px 12px;border-radius:18px;background:#111126;border:2px solid var(--pink);box-shadow:0 0 20px #ff4f9a22}
+.targetEmoji{font-size:58px;line-height:1.15}.targetName{font-size:21px;font-weight:1000;color:var(--yellow)}.targetTip{font-size:12px;color:#dedbff;margin-top:4px}
+.belt{height:74px;position:relative;overflow:hidden;border-radius:15px;margin:12px 0;background:repeating-linear-gradient(90deg,#29284b 0 38px,#34315b 38px 42px);border:1px solid #514a80}
+.belt:after{content:"";position:absolute;left:0;right:0;top:50%;height:3px;background:var(--cyan);box-shadow:0 0 14px var(--cyan)}
+.beltEmoji{position:absolute;left:0;top:6px;font-size:44px;white-space:nowrap;animation:slide 3s linear infinite}
+@keyframes slide{from{transform:translateX(105%)}to{transform:translateX(-130%)}}
+.camera{position:relative;width:100%;max-width:440px;aspect-ratio:4/3;margin:10px auto;border-radius:20px;overflow:hidden;background:#070711;border:2px solid #6a5ca1;box-shadow:0 0 0 3px #ffffff08}
+video{display:none;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+.placeholder{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#d8d5ff;font-size:14px}.placeholder span{font-size:48px}
+.status{position:absolute;left:8px;right:8px;bottom:8px;padding:8px;border-radius:12px;background:#070711c9;font-size:13px;font-weight:800}
+.meter{min-height:24px;margin:8px 0;font-size:14px;font-weight:800;color:var(--cyan)}
+button{width:100%;border:0;border-radius:15px;padding:15px 10px;font-size:17px;font-weight:1000;cursor:pointer;touch-action:manipulation}
+.primary{color:#111026;background:linear-gradient(100deg,var(--yellow),#ffab63);box-shadow:0 4px 0 #a65c38}
+.secondary{margin-top:9px;background:var(--cyan);color:#101026}.hidden{display:none!important}
+.note{font-size:11px;line-height:1.5;color:#c7c4e9;margin:12px 4px 0}
+.finish{padding:25px 5px}.trophy{font-size:75px}.finish h2{font-size:29px;color:var(--yellow)}
+@media(max-width:360px){h1{font-size:27px}.targetEmoji{font-size:50px}}
+</style></head><body><main>
+<div class="brand">FACE CHALLENGE</div><h1>おかおマッチ！</h1><div class="sub">おかおをまねしてゲートをとおろう！</div>
+<div class="toprow"><span id="progress">STAGE 1 / 5</span><span id="count">⭐ 0</span></div><div class="track"><div id="bar" class="bar"></div></div>
+<section id="game" class="panel">
+<div id="instruction" class="instruction">お手本とおなじ顔をしてね！</div>
+<div class="target"><div id="face" class="targetEmoji">😄</div><div id="name" class="targetName">にこにこ笑顔</div><div id="tip" class="targetTip">にっこり笑ってみよう！</div></div>
+<div class="belt"><div id="beltEmoji" class="beltEmoji">😄 😄 😄 😄 😄</div></div>
+<div class="camera"><video id="video" autoplay playsinline muted></video><div id="placeholder" class="placeholder"><span>🤳</span><div>ここにおかおがうつるよ</div></div><div id="status" class="status">カメラをひらいてね</div></div>
+<div id="meter" class="meter">お手本の顔をまねしよう！</div>
+<button id="start" class="primary">📷 カメラとゲームをスタート</button><button id="next" class="secondary hidden">つぎのステージへ ➜</button>
+<p class="note">カメラ映像はこのページ内で処理します。表情判定は目安です。2人ステージでは2人ともカメラに映ってね！</p>
+</section>
+<section id="finish" class="finish hidden"><div class="trophy">🏆</div><h2>ぜんぶクリア！</h2><p>おかおマッチのめいじん！</p><button id="again" class="primary">もういっかい！</button></section>
+<p class="note">iPhoneのSafariで遊べるよ。カメラの許可とインターネット接続が必要です。</p>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
 <script>
-(() => {
-  const stages = [
-    {emoji:"😄", name:"にこにこ笑顔", tip:"にっこり笑ってみよう！", key:"happy"},
-    {emoji:"😠", name:"おこった顔", tip:"まゆげをキュッとしてみよう！", key:"angry"},
-    {emoji:"🤪", name:"おもしろ変顔", tip:"びっくり顔や変顔をしてみよう！", key:"funny"},
-    {emoji:"😆", name:"とびっきりの笑顔", tip:"さいごは大きく笑おう！", key:"happy"}
-  ];
-  const $ = id => document.getElementById(id);
-  let index=0, stream=null, modelsReady=false, running=false, busy=false, timer=null, matchedSince=0, loadPromise=null;
-  const setStatus = t => $("status").textContent=t;
-  function render(){
-    const s=stages[index];
-    $("progress").textContent=`ステージ ${index+1} / ${stages.length}`;
-    $("bar").style.width=`${(index+1)/stages.length*100}%`;
-    $("face").textContent=s.emoji; $("name").textContent=s.name; $("tip").textContent=s.tip;
-    $("meter").textContent="お手本と同じ表情をしてみよう！";
-    $("next").classList.add("hidden"); $("start").classList.remove("hidden");
-    $("start").disabled=running;
-    $("start").textContent=running?"📷 自動判定中":"📷 カメラと自動判定をスタート";
-    $("finish").classList.add("hidden"); $("game").classList.remove("hidden");
-    matchedSince=0;
-    if(running) setStatus("おかおをうつしてね！");
-  }
-  async function loadModels(){
-    if(modelsReady)return;
-    if(loadPromise)return loadPromise;
-    loadPromise=(async()=>{
-      if(!window.faceapi) throw new Error("表情認識ライブラリを読み込めません");
-      setStatus("表情を見分ける準備中…");
-      const base="https://justadudewhohacks.github.io/face-api.js/models";
-      await Promise.all([
-        faceapi.nets.tinyFaceDetector.loadFromUri(base),
-        faceapi.nets.faceExpressionNet.loadFromUri(base)
-      ]);
-      modelsReady=true;
-    })();
-    try{await loadPromise;}catch(e){loadPromise=null;throw e;}
-  }
-  function getScore(expressions){
-    const e=expressions||{};
-    if(stages[index].key==="happy") return e.happy||0;
-    if(stages[index].key==="angry") return e.angry||0;
-    return Math.max(e.surprised||0,e.disgusted||0,e.fearful||0);
-  }
-  function playSuccessSound(){
-    try {
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (!AudioCtx) return;
-      const ctx = new AudioCtx();
-      const now = ctx.currentTime;
-      [[659.25,0],[783.99,0.13],[1046.5,0.26]].forEach(([freq,offset])=>{
-        const osc=ctx.createOscillator();
-        const gain=ctx.createGain();
-        osc.type="sine";
-        osc.frequency.setValueAtTime(freq,now+offset);
-        gain.gain.setValueAtTime(0.0001,now+offset);
-        gain.gain.exponentialRampToValueAtTime(0.18,now+offset+0.025);
-        gain.gain.exponentialRampToValueAtTime(0.0001,now+offset+0.28);
-        osc.connect(gain);gain.connect(ctx.destination);
-        osc.start(now+offset);osc.stop(now+offset+0.3);
-      });
-      setTimeout(()=>ctx.close(),800);
-    } catch(e) {}
-  }
-  function win(){
-    if(busy||!running)return;
-    playSuccessSound();
-    busy=true; matchedSince=0;
-    if(timer){clearInterval(timer);timer=null;}
-    $("face").textContent="🎉";
-    $("meter").textContent="せいかい！すごい！";
-    setStatus("せいかい！");
-    $("next").classList.remove("hidden"); $("start").classList.add("hidden");
-  }
-  async function detect(){
-    if(!running||busy||!modelsReady||$("video").readyState<2)return;
-    try{
-      const result=await faceapi.detectSingleFace($("video"),new faceapi.TinyFaceDetectorOptions({inputSize:224,scoreThreshold:.45})).withFaceExpressions();
-      if(!result){matchedSince=0;$("meter").textContent="おかおが見つからないよ。カメラを見てね！";setStatus("カメラに顔をうつしてね");return;}
-      const score=getScore(result.expressions);
-      const threshold=stages[index].key==="happy"?.72:stages[index].key==="angry"?.28:.48;
-      if(score>=threshold){
-        if(!matchedSince)matchedSince=Date.now();
-        const left=Math.max(0,1200-(Date.now()-matchedSince));
-        $("meter").textContent="そのおかお！そのままキープ！";
-        setStatus(`いいね！ ${(left/1000).toFixed(1)}秒キープ！`);
-        if(left===0)win();
-      } else {
-        matchedSince=0;
-        $("meter").textContent="表情をもうちょっとまねしてみよう！";
-        setStatus("お手本："+stages[index].name);
-      }
-    }catch(e){$("meter").textContent="表情を判定中…";}
-  }
-  async function start(){
-    if(running)return;
-    $("start").disabled=true;
-    try{
-      if(!navigator.mediaDevices?.getUserMedia) throw new Error("Safariの安全な接続（HTTPS）で開いてね");
-      setStatus("カメラを起動中…");
-      stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:"user",width:{ideal:640},height:{ideal:480}}});
-      $("video").srcObject=stream; $("video").style.display="block"; $("placeholder").classList.add("hidden");
-      await new Promise(resolve=>{$("video").onloadedmetadata=resolve;});
-      await $("video").play();
-      await loadModels();
-      running=true; busy=false; $("start").disabled=true; $("start").textContent="📷 自動判定中";
-      setStatus("お手本と同じ顔をしてね！");
-      $("meter").textContent="同じ表情を1.2秒キープするとクリア！";
-      timer=setInterval(detect,250);
-    }catch(e){
-      setStatus("起動できなかったよ");
-      $("meter").textContent=(e&&e.message)||"カメラの許可とインターネット接続を確認してね。";
-      $("start").disabled=false; $("start").textContent="もういちど試す";
-      if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}
-    }
-  }
-  function next(){
-    index++;
-    if(index>=stages.length){
-      if(timer){clearInterval(timer);timer=null;}
-      running=false;busy=false;
-      if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}
-      $("video").srcObject=null; $("video").style.display="none"; $("placeholder").classList.remove("hidden");
-      $("game").classList.add("hidden"); $("finish").classList.remove("hidden");
-      $("progress").textContent="ぜんぶクリア！"; $("bar").style.width="100%"; setStatus("ぜんぶクリア！");
-    } else {busy=false;render();}
-  }
-  $("start").addEventListener("click",start);
-  $("next").addEventListener("click",next);
-  $("again").addEventListener("click",()=>{index=0;render();if(!running)start();});
-  render();
+(()=> {
+const stages=[
+ {emoji:"😄",name:"にこにこ笑顔",tip:"にっこり笑ってみよう！",key:"happy",belt:"😄 😄 😄 😄 😄"},
+ {emoji:"😳",name:"めを見開く",tip:"目をぱっちり！びっくり顔！",key:"eyes",belt:"😳 👀 😳 👀 😳"},
+ {emoji:"😊😊",name:"2人でニコニコ",tip:"2人とも笑顔になったらクリア！",key:"two",belt:"😊 😊 😊 😊 😊"},
+ {emoji:"😉",name:"目をつぶってニコニコ",tip:"目をぎゅっと閉じて笑ってね！",key:"closedSmile",belt:"😉 😊 😉 😊 😉"},
+ {emoji:"😮",name:"お口をあーん！",tip:"お口を大きく開けて「あー！」",key:"mouthOpen",belt:"😮 😲 😮 😲 😮"}
+];
+const $=id=>document.getElementById(id);
+let i=0,stream=null,running=false,busy=false,modelsReady=false,loadPromise=null,timer=null,stableSince=0,stars=0;
+function status(t){$("status").textContent=t}
+function render(){
+ let s=stages[i];$("progress").textContent=`STAGE ${i+1} / ${stages.length}`;$("count").textContent=`⭐ ${stars}`;
+ $("bar").style.width=((i+1)/stages.length*100)+"%";$("instruction").textContent=i===2?"2人でいっしょにチャレンジ！":"お手本とおなじ顔をしてね！";
+ $("face").textContent=s.emoji;$("name").textContent=s.name;$("tip").textContent=s.tip;$("beltEmoji").textContent=s.belt;
+ $("meter").textContent="お手本の顔をまねしよう！";$("next").classList.add("hidden");$("start").classList.toggle("hidden",running);
+ $("finish").classList.add("hidden");$("game").classList.remove("hidden");stableSince=0;busy=false;
+ if(running)status(i===2?"2人ともカメラに映ってね！":"おかおをうつしてね！");
+}
+async function loadModels(){
+ if(modelsReady)return;if(loadPromise)return loadPromise;
+ loadPromise=(async()=>{if(!window.faceapi)throw Error("表情認識ライブラリを読み込めません");
+ const base="https://justadudewhohacks.github.io/face-api.js/models";
+ await Promise.all([faceapi.nets.tinyFaceDetector.loadFromUri(base),faceapi.nets.faceExpressionNet.loadFromUri(base),faceapi.nets.faceLandmark68Net.loadFromUri(base)]);modelsReady=true;})();
+ try{await loadPromise}catch(e){loadPromise=null;throw e}
+}
+function scoreFor(expressions,key){let e=expressions||{};if(key==="eyes")return e.surprised||0;return e.happy||0}
+function dist(a,b){return Math.hypot(a.x-b.x,a.y-b.y)}
+function eyeRatio(points,offset){const p=points.slice(offset,offset+6);return (dist(p[1],p[5])+dist(p[2],p[4]))/(2*Math.max(1,dist(p[0],p[3])))}
+function eyesClosed(landmarks){const p=landmarks.positions;return (eyeRatio(p,36)+eyeRatio(p,42))/2 < .205}
+function mouthOpen(landmarks){const p=landmarks.positions;return dist(p[62],p[66])/Math.max(1,dist(p[60],p[64])) > .30}
+function win(){
+ if(busy||!running)return;busy=true;stars++;playSound();if(timer){clearInterval(timer);timer=null}
+ $("meter").textContent="せいかい！すごい！ 🎉";status("✨ クリア！");$("beltEmoji").style.animationPlayState="paused";
+ $("next").classList.remove("hidden");$("start").classList.add("hidden")
+}
+function playSound(){
+ try{let A=window.AudioContext||window.webkitAudioContext;if(!A)return;let c=new A(),n=c.currentTime;
+ [[659,0],[784,.13],[1047,.26]].forEach(([f,d])=>{let o=c.createOscillator(),g=c.createGain();o.type="sine";o.frequency.value=f;g.gain.setValueAtTime(.001,n+d);g.gain.exponentialRampToValueAtTime(.16,n+d+.025);g.gain.exponentialRampToValueAtTime(.001,n+d+.28);o.connect(g);g.connect(c.destination);o.start(n+d);o.stop(n+d+.3)});setTimeout(()=>c.close(),850)}catch(e){}
+}
+async function detect(){
+ if(!running||busy||!modelsReady||$("video").readyState<2)return;
+ try{
+ const faces=await faceapi.detectAllFaces($("video"),new faceapi.TinyFaceDetectorOptions({inputSize:320,scoreThreshold:.35})).withFaceLandmarks().withFaceExpressions();
+ let ok=false,needed=stages[i].key;
+ if(needed==="two"){
+   ok=faces.length>=2 && faces.filter(f=>(f.expressions.happy||0)>=.48).length>=2;
+   $("meter").textContent=faces.length<2?"あと1人カメラに入ってね！":ok?"2人ともニコニコ！そのまま！":"2人とも笑ってみよう！";
+ }else{
+   if(faces.length){
+    if(needed==="closedSmile") ok=faces.some(f=>eyesClosed(f.landmarks)&&(f.expressions.happy||0)>=.30);
+    else if(needed==="mouthOpen") ok=faces.some(f=>mouthOpen(f.landmarks));
+    else {let score=Math.max(...faces.map(f=>scoreFor(f.expressions,needed)));let threshold=needed==="eyes"?.32:.48;ok=score>=threshold;}
+   }
+   let prompt=needed==="eyes"?"目をもっとぱっちり開いてみて！":needed==="closedSmile"?"目をぎゅっと閉じて笑ってみて！":needed==="mouthOpen"?"お口をもっと大きく開けて「あー」！":"もう少しニッコリしてみよう！";
+   $("meter").textContent=ok?"その顔！キープしてね！":prompt;
+ }
+ if(ok){if(!stableSince)stableSince=Date.now();let left=Math.max(0,900-(Date.now()-stableSince));status("いいね！ "+(left/1000).toFixed(1)+"秒キープ！");if(left===0)win()}
+ else{stableSince=0;if(needed!=="two")status("お手本："+stages[i].name)}
+ }catch(e){$("meter").textContent="顔を判定中…"}
+}
+async function start(){
+ if(running)return;$("start").disabled=true;
+ try{
+ if(!navigator.mediaDevices?.getUserMedia)throw Error("HTTPSのSafariで開いてね");
+ status("カメラを起動中…");stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:"user",width:{ideal:960},height:{ideal:720}}});
+ $("video").srcObject=stream;$("video").style.display="block";$("placeholder").classList.add("hidden");await new Promise(r=>$("video").onloadedmetadata=r);await $("video").play();
+ await loadModels();running=true;$("start").disabled=true;$("start").classList.add("hidden");status("お手本と同じ顔をしてね！");$("meter").textContent="同じ表情を0.9秒キープするとクリア！";timer=setInterval(detect,220);
+ }catch(e){status("起動できなかったよ");$("meter").textContent=e.message||"カメラの許可とインターネット接続を確認してね。";$("start").disabled=false;$("start").classList.remove("hidden");if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}}
+}
+function next(){
+ i++;if(i>=stages.length){if(timer)clearInterval(timer);timer=null;running=false;if(stream)stream.getTracks().forEach(t=>t.stop());stream=null;$("video").srcObject=null;$("video").style.display="none";$("placeholder").classList.remove("hidden");$("game").classList.add("hidden");$("finish").classList.remove("hidden");$("progress").textContent="ALL CLEAR!";$("bar").style.width="100%";$("count").textContent=`⭐ ${stars}`;return}
+ $("beltEmoji").style.animationPlayState="running";render()
+}
+$("start").addEventListener("click",start);$("next").addEventListener("click",next);$("again").addEventListener("click",()=>{i=0;stars=0;render();start()});render();
 })();
-</script>
-</body>
-</html>
+</script></body></html>
