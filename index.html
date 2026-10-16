@@ -112,9 +112,9 @@ async function detect(){
   if(ok){
    if(!stableSince)stableSince=Date.now();
    const elapsed=Date.now()-stableSince;
-   $("meterFill").style.width=Math.min(100,elapsed/14)+"%";
-   status("いいね！ "+(Math.max(0,1400-elapsed)/1000).toFixed(1)+"秒キープ！");
-   if(elapsed>=1400)win();
+   $("meterFill").style.width=Math.min(100,elapsed/30)+"%";
+   status("いいね！ "+(Math.max(0,3000-elapsed)/1000).toFixed(1)+"秒キープ！");
+   if(elapsed>=3000)win();
   }else{
    stableSince=0;
    $("meterFill").style.width="5%";
