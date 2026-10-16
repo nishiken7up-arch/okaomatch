@@ -43,6 +43,10 @@ main{overflow:visible;padding-bottom:calc(28px + env(safe-area-inset-bottom))}
 .button{position:relative;z-index:5;margin-top:8px;min-height:54px}
 .button.secondary{margin-top:12px}
 @media(max-height:760px){.lane-wrap{height:235px}.camera-frame{height:clamp(150px,42vw,185px);max-height:185px}.prompt{margin-top:7px;margin-bottom:7px}}
+/* v13: compact 3D lane and larger camera preview */
+.lane-wrap{height:210px!important;margin-bottom:8px!important;flex:none}
+.camera-frame{height:clamp(260px,72vw,320px)!important;max-height:none!important;aspect-ratio:auto!important;margin:8px auto 12px!important;flex:none}
+@media(max-height:760px){.lane-wrap{height:180px!important}.camera-frame{height:clamp(205px,58vw,250px)!important;max-height:none!important}.prompt{margin-top:6px;margin-bottom:6px}}
 </style></head><body><main>
 <div class="top"><div class="logo">👑 おかおマッチ！</div><div id="stagePill" class="stage-pill">ステージ 1/5</div><button id="sound" class="iconbtn" aria-label="サウンド">🔊</button></div>
 <div class="scoreline"><span id="progress">STAGE 1 / 5</span><span id="count">⭐ 0</span></div><div class="progress"><div id="bar"></div></div>
