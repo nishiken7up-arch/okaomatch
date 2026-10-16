@@ -48,13 +48,13 @@
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script><script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script><script>
 (()=>{
 const stages=[
- {emoji:"😄",name:"にこにこ笑顔",tip:"にっこり笑ってみよう！",key:"happy",tokens:["😄","😊","😄","😁","😄"],threshold:.22},
- {emoji:"😳",name:"目を見開く",tip:"目をぱっちり！",key:"eyes",tokens:["😳","👀","😮","👀","😳"],threshold:.12},
- {emoji:"😊😊",name:"2人でニコニコ",tip:"2人とも笑顔になったらクリア！",key:"two",tokens:["😊😊","😄😄","😊😊","😁😁","😊😊"],threshold:.22},
- {emoji:"😉",name:"目をつぶってニコニコ",tip:"目をぎゅっと閉じて笑ってね！",key:"closedSmile",tokens:["😉","😊","😉","😊","😉"],threshold:.12},
- {emoji:"😮",name:"お口をあーん！",tip:"お口を大きく開けて「あー！」",key:"mouthOpen",tokens:["😮","😲","😮","😲","😮"],threshold:.16}
+ {emoji:"😄",name:"にこにこ笑顔",tip:"にっこり笑ってみよう！",key:"happy",tokens:["😄","😊","😄","😁","😄"],threshold:.05},
+ {emoji:"😳",name:"目を見開く",tip:"目をぱっちり！",key:"eyes",tokens:["😳","👀","😮","👀","😳"],threshold:.03},
+ {emoji:"😊😊",name:"2人でニコニコ",tip:"2人とも笑顔になったらクリア！",key:"two",tokens:["😊😊","😄😄","😊😊","😁😁","😊😊"],threshold:.05},
+ {emoji:"😉",name:"目をつぶってニコニコ",tip:"目をぎゅっと閉じて笑ってね！",key:"closedSmile",tokens:["😉","😊","😉","😊","😉"],threshold:.03},
+ {emoji:"😮",name:"お口をあーん！",tip:"お口を大きく開けて「あー！」",key:"mouthOpen",tokens:["😮","😲","😮","😲","😮"],threshold:.05}
 ];
-const $=id=>document.getElementById(id);let i=0,stream=null,running=false,busy=false,modelsReady=false,loadPromise=null,timer=null,stableSince=0,stars=0,soundOn=true;
+const $=id=>document.getElementById(id);let i=0,stream=null,running=false,busy=false,detecting=false,modelsReady=false,loadPromise=null,timer=null,stableSince=0,stars=0,soundOn=true;
 function status(t){$("status").textContent=t}
 // Real WebGL 3D scene: perspective track, glowing gate, floating emoji sprites.
 let renderer3d,scene3d,camera3d,clock3d,emojiMeshes=[],gateGroup,roadGroup,raf3d;
@@ -71,10 +71,41 @@ clock3d=new THREE.Clock();const resize=()=>{if(!renderer3d)return;const w=canvas
 function update3DStage(){if(!emojiMeshes.length)return;const s=stages[i];emojiMeshes.forEach((m,n)=>{m.material.map.dispose();m.material.map=makeEmojiTexture(s.tokens[n]||s.emoji);m.material.needsUpdate=true})}
 function render(){init3D();const s=stages[i];update3DStage();$("progress").textContent=`STAGE ${i+1} / ${stages.length}`;$("stagePill").textContent=`ステージ ${i+1}/${stages.length}`;$("count").textContent=`⭐ ${stars}`;$("bar").style.width=((i+1)/stages.length*100)+"%";$("promptEmoji").textContent=s.emoji;$("gateFace").textContent=s.emoji;$("name").textContent=s.name;$("laneCaption").textContent=s.tip;for(let n=1;n<=5;n++)$("token"+n).textContent=s.tokens[n-1];$("meterIcon").textContent=s.emoji;$("meterFill").style.width="5%";$("meter").textContent="お手本とおなじ顔をしてみよう！";$("next").classList.add("hidden");$("start").classList.toggle("hidden",running);$("finish").classList.add("hidden");$("game").classList.remove("hidden");$("gateFace").classList.remove("glow");stableSince=0;busy=false;if(running)status(i===2?"2人ともカメラに映ってね！":"カメラにおかおをうつしてね！")}
 async function loadModels(){if(modelsReady)return;if(loadPromise)return loadPromise;loadPromise=(async()=>{if(!window.faceapi)throw Error("表情認識を読み込めません");const base="https://justadudewhohacks.github.io/face-api.js/models";await Promise.all([faceapi.nets.tinyFaceDetector.loadFromUri(base),faceapi.nets.faceExpressionNet.loadFromUri(base),faceapi.nets.faceLandmark68Net.loadFromUri(base)]);modelsReady=true})();try{await loadPromise}catch(e){loadPromise=null;throw e}}
-function dist(a,b){return Math.hypot(a.x-b.x,a.y-b.y)}function eyeRatio(points,offset){const p=points.slice(offset,offset+6);return (dist(p[1],p[5])+dist(p[2],p[4]))/(2*Math.max(1,dist(p[0],p[3])))}function eyesClosed(lm){const p=lm.positions;return (eyeRatio(p,36)+eyeRatio(p,42))/2<.235}function eyesOpen(lm){const p=lm.positions;return (eyeRatio(p,36)+eyeRatio(p,42))/2>.235}function mouthOpen(lm){const p=lm.positions;return dist(p[62],p[66])/Math.max(1,dist(p[60],p[64]))>.20}
+function dist(a,b){return Math.hypot(a.x-b.x,a.y-b.y)}function eyeRatio(points,offset){const p=points.slice(offset,offset+6);return (dist(p[1],p[5])+dist(p[2],p[4]))/(2*Math.max(1,dist(p[0],p[3])))}function eyesClosed(lm){const p=lm.positions;return (eyeRatio(p,36)+eyeRatio(p,42))/2<.32}function eyesOpen(lm){const p=lm.positions;return (eyeRatio(p,36)+eyeRatio(p,42))/2>.12}function mouthOpen(lm){const p=lm.positions;return dist(p[62],p[66])/Math.max(1,dist(p[60],p[64]))>.08}
 function win(){if(busy||!running)return;busy=true;stars++;playSound();if(timer){clearInterval(timer);timer=null}$("meter").textContent="せいかい！すごい！ 🎉";$("meterFill").style.width="100%";status("✨ クリア！");$("gateFace").classList.add("glow");$("next").classList.remove("hidden");$("start").classList.add("hidden");$("count").textContent=`⭐ ${stars}`}
 function playSound(){if(!soundOn)return;try{const A=window.AudioContext||window.webkitAudioContext;if(!A)return;const c=new A(),n=c.currentTime;[[659,0],[784,.13],[1047,.26]].forEach(([f,d])=>{const o=c.createOscillator(),g=c.createGain();o.type="sine";o.frequency.value=f;g.gain.setValueAtTime(.001,n+d);g.gain.exponentialRampToValueAtTime(.12,n+d+.025);g.gain.exponentialRampToValueAtTime(.001,n+d+.28);o.connect(g);g.connect(c.destination);o.start(n+d);o.stop(n+d+.3)});setTimeout(()=>c.close(),850)}catch(e){}}
-async function detect(){if(!running||busy||!modelsReady||$("video").readyState<2)return;try{const faces=await faceapi.detectAllFaces($("video"),new faceapi.TinyFaceDetectorOptions({inputSize:416,scoreThreshold:.22})).withFaceLandmarks().withFaceExpressions();const s=stages[i];let ok=false;if(s.key==="two"){const smiling=faces.filter(f=>(f.expressions.happy||0)>=s.threshold);ok=faces.length>=2&&smiling.length>=2;$("meter").textContent=faces.length<2?"もう1人もカメラに入ってね！":ok?"2人ともニコニコ！そのまま！":"2人とも少し笑ってみよう！"}else if(faces.length){if(s.key==="closedSmile")ok=faces.some(f=>eyesClosed(f.landmarks)&&(f.expressions.happy||0)>=.12);else if(s.key==="mouthOpen")ok=faces.some(f=>mouthOpen(f.landmarks));else if(s.key==="eyes")ok=faces.some(f=>eyesOpen(f.landmarks)||(f.expressions.surprised||0)>=s.threshold);else ok=faces.some(f=>(f.expressions.happy||0)>=s.threshold);$("meter").textContent=ok?"いいね！その顔！":""+s.tip}else{$("meter").textContent="おかおをカメラにうつしてね！"}if(ok){if(!stableSince)stableSince=Date.now();const elapsed=Date.now()-stableSince;$("meterFill").style.width=Math.min(100,elapsed/9)+"%";status("いいね！そのまま！");if(elapsed>=900)win()}else{stableSince=0;$("meterFill").style.width="5%";if(s.key==="two")status("2人ともカメラに入ってね！");else status("お手本をまねしてね！")}}catch(e){$("meter").textContent="顔を判定中…"}}
+async function detect(){
+ if(!running||busy||detecting||!modelsReady||$("video").readyState<2)return;
+ detecting=true;
+ try{
+  const faces=await faceapi.detectAllFaces($("video"),new faceapi.TinyFaceDetectorOptions({inputSize:320,scoreThreshold:.12})).withFaceLandmarks().withFaceExpressions();
+  if(!running||busy)return;
+  const s=stages[i];
+  // Child-friendly mode: face presence is the main condition. Stage 3 still asks for two faces.
+  const ok=(s.key==="two") ? faces.length>=2 : faces.length>=1;
+  if(s.key==="two"){
+   $("meter").textContent=faces.length<2?"もう1人もカメラに入ってね！":"2人ともOK！そのまま！";
+  }else{
+   $("meter").textContent=ok?"いいね！そのまま！": "おかおをカメラにうつしてね！";
+  }
+  if(ok){
+   if(!stableSince)stableSince=Date.now();
+   const elapsed=Date.now()-stableSince;
+   $("meterFill").style.width=Math.min(100,elapsed/9)+"%";
+   status(s.key==="two"?"2人ともOK！そのまま！":"いいね！そのまま！");
+   if(elapsed>=900)win();
+  }else{
+   stableSince=0;
+   $("meterFill").style.width="5%";
+   status(s.key==="two"?"2人ともカメラに入ってね！":"カメラにおかおをうつしてね！");
+  }
+ }catch(e){
+  // Keep the game responsive if a single inference frame fails; show an actionable message.
+  $("meter").textContent="顔を判定中… カメラに顔を近づけてね";
+ }finally{
+  detecting=false;
+ }
+}
 async function start(){if(running)return;$("start").disabled=true;try{if(!navigator.mediaDevices?.getUserMedia)throw Error("HTTPSのSafariで開いてね");status("カメラを起動中…");stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:"user",width:{ideal:960},height:{ideal:720}}});$("video").srcObject=stream;$("video").style.display="block";$("placeholder").classList.add("hidden");await new Promise(r=>$("video").onloadedmetadata=r);await $("video").play();await loadModels();running=true;$("start").disabled=false;$("start").classList.add("hidden");status("お手本の顔をまねしてね！");$("meter").textContent="表情ができたら、そのままキープ！";timer=setInterval(detect,180)}catch(e){status("カメラを起動できなかったよ");$("meter").textContent=e.message||"カメラの許可とネット接続を確認してね";$("start").disabled=false;$("start").classList.remove("hidden");if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}}}
 function next(){i++;if(i>=stages.length){if(timer)clearInterval(timer);timer=null;running=false;if(stream)stream.getTracks().forEach(t=>t.stop());stream=null;$("video").srcObject=null;$("video").style.display="none";$("placeholder").classList.remove("hidden");$("game").classList.add("hidden");$("finish").classList.remove("hidden");$("progress").textContent="ALL CLEAR!";$("stagePill").textContent="ぜんぶクリア！";$("bar").style.width="100%";$("count").textContent=`⭐ ${stars}`;return}render()}
 $("start").addEventListener("click",start);$("next").addEventListener("click",next);$("again").addEventListener("click",()=>{i=0;stars=0;render();start()});$("sound").addEventListener("click",()=>{soundOn=!soundOn;$("sound").textContent=soundOn?"🔊":"🔇"});render();
